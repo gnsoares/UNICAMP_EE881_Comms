@@ -1,7 +1,17 @@
 #
 # IMPORTS
 #
+import numpy as np
+
+from numpy.random import default_rng
 from numpy.typing import ArrayLike
+
+
+#
+# CONSTANTS
+#
+MEAN = 0
+VARIANCE = 1
 
 
 #
@@ -34,7 +44,9 @@ def transmit(signal: ArrayLike) -> ArrayLike:
     ----------
     transmitted signal
     """
-    pass
+    rng = default_rng()
+    noise = rng.normal(MEAN, np.sqrt(VARIANCE), signal.size)
+    return signal + noise
 
 
 def decode(word: ArrayLike) -> str:
