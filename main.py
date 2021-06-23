@@ -74,7 +74,17 @@ def decode(word: ArrayLike) -> str:
     ----------
     decoded message
     """
+    # TODO actually decode message
     pass
+
+    # convert message bits to string
+    message_bin = str()
+    message_hex = hex(int(message_bin, 2)).lstrip('0x')
+    message = bytearray.fromhex(message_hex).decode(encoding='UTF-8',
+                                                    errors='replace')
+
+    # return decoded message
+    return message
 
 
 if __name__ == '__main__':
