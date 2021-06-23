@@ -29,7 +29,20 @@ def encode(message: str) -> ArrayLike:
     ----------
     encoded codeword
     """
-    pass
+    # convert string to array of bits
+    message_bytes = message.encode(encoding='UTF-8', errors='replace')
+    message_int = int(message_bytes.hex(), 16)
+    message_bin = bin(message_int).lstrip('0b')
+
+    # initialize codeword
+    code = np.array([], dtype=np.float64)
+
+    # TODO actually encode message
+    for bit in message_bin:
+        pass
+
+    # return codeword
+    return code
 
 
 def transmit(signal: ArrayLike) -> ArrayLike:
