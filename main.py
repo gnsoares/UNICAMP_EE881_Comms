@@ -3,6 +3,7 @@
 #
 import numpy as np
 
+from graph import viterbi
 from numpy.random import default_rng
 from numpy.typing import ArrayLike
 
@@ -10,6 +11,7 @@ from numpy.typing import ArrayLike
 #
 # CONSTANTS
 #
+ENCODING = 'ascii'
 MEAN = 0
 VARIANCE = 1
 
@@ -17,6 +19,14 @@ VARIANCE = 1
 #
 # CODE
 #
+def str_to_bits(str_: str) -> str:
+    """
+    """
+    str_bytes = str_.encode(encoding=ENCODING, errors='replace')
+    str_int = int(str_bytes.hex(), 16)
+    return bin(str_int).lstrip('0b')
+
+
 def encode(message: str) -> ArrayLike:
     """
     Encodes a string message into a codeword.
@@ -30,19 +40,26 @@ def encode(message: str) -> ArrayLike:
     encoded codeword
     """
     # convert string to array of bits
-    message_bytes = message.encode(encoding='UTF-8', errors='replace')
-    message_int = int(message_bytes.hex(), 16)
-    message_bin = bin(message_int).lstrip('0b')
+    message_bin = str_to_bits(message)
 
     # initialize codeword
-    code = np.array([], dtype=np.float64)
+    code = []
 
-    # TODO actually encode message
-    for bit in message_bin:
-        pass
+    # encode message
+    window = [1, 1, 1]
+    for bit in map(int, message_bin):
+        symbol = (2*bit-1)
+        code.extend([
+            window[0]*window[1]*symbol,
+            window[1]*window[2]*symbol,
+            window[0]*window[2]*symbol,
+            symbol,
+        ])
+        window.pop(0)
+        window.append(symbol)
 
     # return codeword
-    return code
+    return np.array(code, dtype=np.float64)
 
 
 def transmit(signal: ArrayLike) -> ArrayLike:
@@ -74,13 +91,14 @@ def decode(word: ArrayLike) -> str:
     ----------
     decoded message
     """
-    # TODO actually decode message
-    pass
+    # decode bits
+    message_bin = viterbi(word)[1]
 
     # convert message bits to string
-    message_bin = str()
     message_hex = hex(int(message_bin, 2)).lstrip('0x')
-    message = bytearray.fromhex(message_hex).decode(encoding='UTF-8',
+    if len(message_hex) % 2 != 0:
+        message_hex = '0' + message_hex
+    message = bytearray.fromhex(message_hex).decode(encoding=ENCODING,
                                                     errors='replace')
 
     # return decoded message
