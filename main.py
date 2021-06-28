@@ -1,6 +1,7 @@
 #
 # IMPORTS
 #
+import argparse
 import numpy as np
 
 from graph import viterbi
@@ -67,7 +68,7 @@ def encode(message: str) -> ArrayLike:
     return np.array(code, dtype=np.float64)
 
 
-def transmit(signal: ArrayLike) -> ArrayLike:
+def transmit(signal: ArrayLike, var: float = None) -> ArrayLike:
     """
     Transmits a signal over a channel with Aditive Gaussian White Noise.
 
@@ -79,8 +80,9 @@ def transmit(signal: ArrayLike) -> ArrayLike:
     ----------
     transmitted signal
     """
+    var = var or VARIANCE
     rng = default_rng()
-    noise = rng.normal(MEAN, np.sqrt(VARIANCE), signal.size)
+    noise = rng.normal(MEAN, np.sqrt(var), signal.size)
     return signal + noise
 
 
@@ -112,10 +114,25 @@ def decode(word: ArrayLike) -> str:
 
 if __name__ == '__main__':
 
+    # creates an argparse object to parse command line option
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--var',
+                        help='AWGN variance',
+                        type=float,
+                        required=False)
+
+    # waits for command line input
+    # (proceeds only if it is validated against the options set before)
+    args = parser.parse_args()
+
+    # read message from std_in
     message = input()
+
+    # execute transmission
     code = encode(message)
-    received_code = transmit(code)
+    received_code = transmit(code, args.var)
     received_message = decode(received_code)
 
+    # print output
     print(f'Mensagem a ser transmitida:\n\t{message}')
     print(f'Mensagem recebida:\n\t{received_message}')
