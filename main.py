@@ -22,12 +22,26 @@ VARIANCE = 1
 #
 def str_to_bits(str_: str) -> str:
     """
+    Converts a string to its corresponding bits.
+
+    Parameters
+    ----------
+    str_: string to be converted
+
+    Returns
+    ----------
+    bits corresponding to string
     """
+    # convert string
     str_bytes = str_.encode(encoding=ENCODING, errors='replace')
     str_int = int(str_bytes.hex(), 16)
     str_bin = bin(str_int).lstrip('0b')
+
+    # pad missing zeros
     while len(str_bin) < 8*len(str_):
         str_bin = '0' + str_bin
+
+    # return string bits
     return str_bin
 
 

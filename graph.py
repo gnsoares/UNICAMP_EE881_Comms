@@ -84,16 +84,14 @@ class Graph:
                 result.append(from_)
         return result
 
-    def add_edge(self, frm: Vertex, to: Vertex, cost=0):
+    def add_edge(self, frm: Vertex, to: Vertex):
         if frm.state not in self.vert_dict or to.state not in self.vert_dict:
             return
         frm.add_neighbor(to)
 
     def remove_edge(self, frm: Vertex, to: Vertex) -> None:
-
         if frm.state not in self.vert_dict or to.state not in self.vert_dict:
             return
-
         frm.remove_neighbor(to)
 
     def get_vertices(self):
@@ -222,7 +220,8 @@ def viterbi(code: ArrayLike) -> str:
 
     # get bits corresponding to chosen path
     bits = ''.join([
-        f'{.5*(vertex.state[1][-1] + 1):.0f}' for vertex in path[DUMMY+1:-3*DUMMY]
+        f'{.5*(vertex.state[1][-1] + 1):.0f}'
+        for vertex in path[DUMMY+1:-3*DUMMY]
     ])
 
     # return decoded
