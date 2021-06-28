@@ -133,10 +133,11 @@ def dot_product(x: list, y: list) -> float:
 
 def viterbi(code: ArrayLike) -> str:
 
-    DUMMY = 12
+    DUMMY = 6
 
     # evaluate code and message size
-    code = np.append(code, [1]*6*DUMMY)
+    code = np.append([1]*6*DUMMY, code)
+    code = np.append(code, [1]*6*3*DUMMY)
     code_len = code.size
     if code_len % 6 != 0:
         print(f'Code size invalid: {code_len}')
@@ -221,7 +222,7 @@ def viterbi(code: ArrayLike) -> str:
 
     # get bits corresponding to chosen path
     bits = ''.join([
-        f'{.5*(vertex.state[1][-1] + 1):.0f}' for vertex in path[1:-1*DUMMY]
+        f'{.5*(vertex.state[1][-1] + 1):.0f}' for vertex in path[DUMMY+1:-3*DUMMY]
     ])
 
     # return decoded

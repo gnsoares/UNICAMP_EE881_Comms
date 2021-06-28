@@ -24,7 +24,10 @@ def str_to_bits(str_: str) -> str:
     """
     str_bytes = str_.encode(encoding=ENCODING, errors='replace')
     str_int = int(str_bytes.hex(), 16)
-    return bin(str_int).lstrip('0b')
+    str_bin = bin(str_int).lstrip('0b')
+    while len(str_bin) < 8*len(str_):
+        str_bin = '0' + str_bin
+    return str_bin
 
 
 def encode(message: str) -> ArrayLike:
