@@ -4,7 +4,9 @@
 ### Criação do ambiente virtual
 
 `virtualenv env`
+
 `source env/bin/activate`
+
 `pip install -r requirements.txt`
 
 ### Transmitindo uma mensagem
