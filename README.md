@@ -20,3 +20,8 @@ E digita a mensagem a ser transmitida. Ou:
 ### Alterando a variância do AWGN
 
 `python main.py --var {{variance}}`
+
+### Teste de porcentagem de erro
+
+`python test.py {{tamanho da mensagem (em caracteres)}} {{repeticoes}}`
+
