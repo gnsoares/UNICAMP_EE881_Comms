@@ -1,17 +1,12 @@
 from main import encode, transmit, decode
-from tests.random import ascii
-from tests.random import emoji
+from random import choice
 
+import argparse
 import pandas as pd
+import string
 
 
-METHODS = {
-    'ascii': ascii,
-    'emoji': emoji,
-}
-
-
-def test(message_len: int, n: int, method: str):
+def test(message_len: int, n: int):
 
     result = {
         'sent': [],
@@ -20,7 +15,10 @@ def test(message_len: int, n: int, method: str):
     }
 
     for _ in range(n):
-        message = METHODS[method](message_len)
+        message = ''.join(
+            choice(string.ascii_letters + string.digits)
+            for _ in range(message_len)
+        )
         result['sent'].append(message)
 
         code = encode(message)
@@ -45,3 +43,23 @@ def test(message_len: int, n: int, method: str):
     pct = mean/message_len
 
     return df, mean, pct
+
+
+if __name__ == '__main__':
+
+    # creates an argparse object to parse command line option
+    parser = argparse.ArgumentParser()
+    parser.add_argument('message_len',
+                        help='Length of messages',
+                        type=int)
+    parser.add_argument('n',
+                        help='Number of repetitions',
+                        type=int)
+
+    # waits for command line input
+    # (proceeds only if it is validated against the options set before)
+    args = parser.parse_args()
+
+    pct = test(args.message_len, args.n)[-1]
+
+    print(f'Error percentage: {100*pct:.2f}%')
