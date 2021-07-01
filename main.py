@@ -72,8 +72,6 @@ def encode(message: str) -> ArrayLike:
             window[1]*window[2]*symbol,
             window[0]*window[2]*symbol,
             window[0]*symbol,
-            window[1]*symbol,
-            window[2]*symbol,
         ])
         window.pop(0)
         window.append(symbol)

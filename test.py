@@ -22,7 +22,7 @@ def test(message_len: int, n: int):
         result['sent'].append(message)
 
         code = encode(message)
-        received_code = transmit(code)
+        received_code = transmit(code, 1)
         received_message = decode(received_code)
         result['received'].append(received_message)
 

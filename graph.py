@@ -26,8 +26,6 @@ class Vertex:
             my_state[2]*my_state[3]*next_state[-1],
             my_state[1]*my_state[3]*next_state[-1],
             my_state[1]*next_state[-1],
-            my_state[2]*next_state[-1],
-            my_state[3]*next_state[-1],
         ]
 
     def remove_neighbor(self, neighbor: 'Vertex'):
@@ -131,16 +129,16 @@ def dot_product(x: list, y: list) -> float:
 
 def viterbi(code: ArrayLike) -> str:
 
-    DUMMY = 6
+    DUMMY = 2
 
     # evaluate code and message size
-    code = np.append([1]*6*DUMMY, code)
-    code = np.append(code, [1]*6*3*DUMMY)
+    code = np.append([1]*4*DUMMY, code)
+    code = np.append(code, [1]*4*3*DUMMY)
     code_len = code.size
-    if code_len % 6 != 0:
+    if code_len % 4 != 0:
         print(f'Code size invalid: {code_len}')
         return
-    message_len = code_len//6
+    message_len = code_len//4
 
     # initialize viterbi graph
     g = Graph()
@@ -152,12 +150,10 @@ def viterbi(code: ArrayLike) -> str:
         for b2 in [1, -1]
         for b3 in [1, -1]
         for b4 in [1, -1]
-        for b5 in [1, -1]
-        for b6 in [1, -1]
     ]
 
     # create the graph vertices starting and ending at the default state
-    for i in range(min(message_len, 6)):
+    for i in range(min(message_len, 4)):
         if message_len % 2 == 0 and i == message_len // 2:
             for state in states[:2**i]:
                 g.add_vertex(i, state)
@@ -169,8 +165,8 @@ def viterbi(code: ArrayLike) -> str:
             g.add_vertex(message_len - i, state[::-1])
 
     # create the intermediate vertices if needed
-    if message_len >= 12:
-        for i in range(6, message_len - 5):
+    if message_len >= 8:
+        for i in range(4, message_len - 3):
             for state in states:
                 g.add_vertex(i, state)
 
@@ -195,7 +191,7 @@ def viterbi(code: ArrayLike) -> str:
             from_list = g.get_vertices_that_reach(dest, states)
 
             # observations of current
-            yi = code[6*i:6*(i+1)]
+            yi = code[4*i:4*(i+1)]
 
             # weight of every transition
             weights = {
